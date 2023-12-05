@@ -5,6 +5,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  creator: 'Veerbal Singh',
   title:
     'QuickClinic: Streamlined Healthcare Appointments & Patient Management',
   description:
