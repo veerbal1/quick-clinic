@@ -1,7 +1,20 @@
 import { Button } from '@/components/ui/button';
+import { getDoctorDetails } from '@/lib/db-queries';
+import { cn } from '@/lib/utils';
 import { CheckIcon } from '@radix-ui/react-icons';
+import { notFound } from 'next/navigation';
 
-function DoctorDetails() {
+async function DoctorDetails({
+  params,
+}: {
+  params: {
+    doctorId: string;
+  };
+}) {
+  const { doctorId } = params;
+  if (!doctorId) return notFound();
+  const { status, data } = await getDoctorDetails(doctorId);
+  if (status === 'failed') return notFound();
   return (
     <div className="bg-white rounded px-4 md:px-0">
       <h1 className="text-lg font-bold mb-4 text-muted-foreground">
@@ -9,48 +22,35 @@ function DoctorDetails() {
       </h1>
       <div className="flex flex-col gap-2">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-green-600">
-          Dr. Veerbal Singh{' '}
+          Dr. {data?.name}
           <span className="text-sm text-muted-foreground font-normal">
-            (He/Him)
+            {data?.gender === 'male' ? '(He/Him)' : 'She/Her'}
           </span>
         </h1>
-        <p className="text-sm text-muted-foreground">
-          MBBS, MD - General Medicine, DM - Cardiology
-        </p>
+        <p className="text-sm text-muted-foreground">{data?.qualifications}</p>
         <hr />
         <div className="grid md:grid-cols-2 gap-6 mt-4">
           <div className="left">
-            <p className="leading-7 text-sm text-justify">
-              Experience over 10 years in the field of Cardiology and Internal
-              Medicine with special interest in Interventional Cardiology. Have
-              been trained in the field of Cardiology at the prestigious Escorts
-              Heart Institute and Research Centre, New Delhi. Have been trained
-              in the field of Internal Medicine at the prestigious Post Graduate
-              Institute of Medical Education and Research, Chandigarh
-            </p>
+            <p className="leading-7 text-sm text-justify">{data?.bio}</p>
           </div>
           <div className="right flex flex-col gap-2">
             <div>
               <h1 className="text-lg font-bold text-muted-foreground">
                 Specializations
               </h1>
-              <p className="leading-7 text-sm">
-                Cardiologist, Interventional Cardiologist, Internal Medicine
-              </p>
+              <p className="leading-7 text-sm">{data?.specialization}</p>
             </div>
             <div>
               <h1 className="text-lg font-bold text-muted-foreground">
                 Qualifications
               </h1>
-              <p className="leading-7 text-sm">
-                MBBS, MD - General Medicine, DM - Cardiology
-              </p>
+              <p className="leading-7 text-sm">{data?.qualifications}</p>
             </div>
             <div>
               <h1 className="text-lg font-bold text-muted-foreground">
                 Experience (Years)
               </h1>
-              <p className="leading-7 text-sm">10</p>
+              <p className="leading-7 text-sm">{data?.experience}</p>
             </div>
           </div>
         </div>
@@ -60,8 +60,18 @@ function DoctorDetails() {
               Verification Status
             </h1>
             <p className="leading-7 text-sm">
-              <span className="text-green-600 flex items-center justify-start">
-                <CheckIcon className="mr-2" /> Verified
+              <span
+                className={cn(
+                  'flex items-center justify-start',
+                  data?.verifiedstatus === 'pending' && 'text-yellow-600',
+                  data?.verifiedstatus === 'rejected' && 'text-red-600',
+                  data?.verifiedstatus === 'verified' && 'text-green-600'
+                )}
+              >
+                <CheckIcon className="mr-2" />
+                {data?.verifiedstatus === 'pending' && 'Pending'}
+                {data?.verifiedstatus === 'rejected' && 'Rejected'}
+                {data?.verifiedstatus === 'verified' && 'Verified'}
               </span>
             </p>
           </div>
@@ -69,27 +79,25 @@ function DoctorDetails() {
             <h1 className="text-lg font-bold text-muted-foreground">
               Unique ID
             </h1>
-            <p className="leading-7 text-sm">D123456</p>
+            <p className="leading-7 text-sm">{data?.doctorcode}</p>
           </div>
           <div>
             <h1 className="text-lg font-bold text-muted-foreground">Rating</h1>
-            <p className="leading-7 text-sm">4.5</p>
+            <p className="leading-7 text-sm">{data?.rating}</p>
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-4">
           <div>
             <h1 className="text-lg font-bold text-muted-foreground">Contact</h1>
             <p className="leading-2 text-sm">
-              <a href="tel:+919876543210">+91 98765 43210</a>
-            </p>
-            <p className="leading-2 text-sm">
-              <a href="mailto:veerbal@gmail.com">veerbal1@gmail.com</a>
-            </p>
-            <p className="leading-2 text-sm">
-              <a href="https://www.google.com/maps/place/Chandigarh">
-                Sector 16, Chandigarh
+              <a href={`tel:+91${data?.contactnumber}`}>
+                +91 {data?.contactnumber}
               </a>
             </p>
+            <p className="leading-2 text-sm">
+              <a href={`mailto:${data?.email}`}>{data?.email}</a>
+            </p>
+            <p className="leading-2 text-sm">{data?.location}</p>
           </div>
         </div>
         <div className="mt-4 w-full flex justify-end">
