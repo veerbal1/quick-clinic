@@ -6,7 +6,7 @@ import { ExitIcon, ReloadIcon } from '@radix-ui/react-icons';
 function SignoutButton() {
   const { pending } = useFormStatus();
   return (
-    <Button disabled={pending}>
+    <Button size={'sm'} disabled={pending}>
       {pending ? (
         <ReloadIcon className="animate-spin mr-2" />
       ) : (

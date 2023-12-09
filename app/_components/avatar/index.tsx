@@ -22,10 +22,14 @@ async function AvatarUI() {
           </AvatarFallback>
         </Avatar>
       </PopoverTrigger>
-      <PopoverContent>
-        {user?.name}
-        <br />
-        {user?.email}
+      <PopoverContent className="w-[200px] mr-4">
+        <div className="flex flex-col space-y-1">
+          <p className="text-sm font-medium leading-none">{user?.name}</p>
+          <p className="text-xs leading-none text-muted-foreground">
+            {user?.email}
+          </p>
+        </div>
+        <hr className='my-4'/>
         <form action={logout}>
           <SignoutButton />
         </form>
