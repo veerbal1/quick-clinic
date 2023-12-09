@@ -1,5 +1,15 @@
-function Dashboard() {
-  return <div>Dashboard Page (Under Development)</div>;
-}
+import React from 'react';
 
-export default Dashboard;
+const DoctorDashboardPage: React.FC = () => {
+  return (
+    <div>
+      <h1>Welcome to the Doctor Dashboard</h1>
+      <p>
+        Here you can manage your appointments, patients, and medical records.
+      </p>
+      {/* Add your dashboard components and functionality here */}
+    </div>
+  );
+};
+
+export default DoctorDashboardPage;
