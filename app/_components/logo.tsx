@@ -8,7 +8,7 @@ function Logo() {
         viewBox="0 0 128 128"
         width="32"
         height="32"
-        fill="white"
+        fill="hsl(142.1 76.2% 36.3%)"
         className='mr-4'
       >
         <path
