@@ -7,8 +7,8 @@ const navLinks = [
     link: '/admin/dashboard',
   },
   {
-    title: 'History',
-    link: '/admin/history',
+    title: 'Verify Doctors',
+    link: '/admin/verify-doctors',
   },
 ];
 
