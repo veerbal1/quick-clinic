@@ -1,16 +1,15 @@
 'use client';
-
+import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { HTMLAttributes, useState } from 'react';
-import { Icons } from './icons';
+import { Icons } from '../icons';
 import { cn } from '@/lib/utils';
 import { signUpAction } from '@/lib/actions';
 import { useFormState, useFormStatus } from 'react-dom';
-import FormInput from './input';
+import FormInput from '../input';
 
-import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -23,46 +22,12 @@ import {
 import { Input } from '@/components/ui/input';
 import {
   Select,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
 import { SelectContent } from '@radix-ui/react-select';
-
-const formSchema = z
-  .object({
-    name: z
-      .string({ required_error: 'Name is required' })
-      .min(3, 'Name must be at least 3 characters long'),
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(6, 'Password must be at least 6 characters long'),
-    confirmPassword: z.string(),
-    gender: z
-      .string()
-      .refine(
-        (value) => value === 'male' || value === 'female',
-        "Gender must be either 'male' or 'female'"
-      ),
-    qualifications: z.string().optional(),
-    experience: z
-      .number({
-        required_error: 'Experience is required',
-      })
-      .int('Experience must be a whole number'),
-    bio: z.string(),
-    contactNumber: z
-      .string()
-      .refine(
-        (value) => value.toString().length === 10,
-        'Contact number must be 10 digits long'
-      ),
-    location: z.string().max(255),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
+import formSchema from './schema';
 
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -74,9 +39,12 @@ function SingupForm({ className, ...props }: UserAuthFormProps) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values);
+    const formData = new FormData();
+    Object.entries(values).forEach(([key, value]) => {
+      formData.append(key, value as string);
+    });
+    dispatch(formData);
   }
 
   return (
@@ -179,18 +147,25 @@ function SingupForm({ className, ...props }: UserAuthFormProps) {
           />
           <FormField
             control={form.control}
+            name="specialization"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Specialization</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="experience"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Experience (Years)</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
-                    min={0}
-                    max={100}
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                  />
+                  <Input type="number" min={0} max={100} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -241,15 +216,5 @@ function SingupForm({ className, ...props }: UserAuthFormProps) {
     </div>
   );
 }
-
-const SignUpButton = () => {
-  const { pending } = useFormStatus();
-  return (
-    <Button disabled={pending}>
-      {pending && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-      Sign Up
-    </Button>
-  );
-};
 
 export default SingupForm;
