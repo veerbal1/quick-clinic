@@ -3,7 +3,7 @@ import { CheckIcon } from '@radix-ui/react-icons';
 
 function DoctorDetails() {
   return (
-    <div className="bg-white rounded">
+    <div className="bg-white rounded px-4 md:px-0">
       <h1 className="text-lg font-bold mb-4 text-muted-foreground">
         Doctor Details
       </h1>
@@ -20,7 +20,7 @@ function DoctorDetails() {
         <hr />
         <div className="grid md:grid-cols-2 gap-6 mt-4">
           <div className="left">
-            <p className="leading-7 text-sm">
+            <p className="leading-7 text-sm text-justify">
               Experience over 10 years in the field of Cardiology and Internal
               Medicine with special interest in Interventional Cardiology. Have
               been trained in the field of Cardiology at the prestigious Escorts
