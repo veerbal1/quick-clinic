@@ -8,11 +8,12 @@ import { authConfig } from './auth.config';
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
-    const user = await sql<User>`SELECT * FROM quick_clinic_users WHERE email=${email}`;
-    return user.rows[0];
+    const { rows, rowCount } =
+      await sql<User>`SELECT * FROM quick_clinic_users WHERE email=${email}`;
+    return rowCount ? rows[0] : undefined;
   } catch (error) {
     console.error('Failed to fetch user:', error);
-    throw new Error('Failed to fetch user.');
+    throw new Error('Database query failed.');
   }
 }
 
@@ -22,22 +23,30 @@ export const { auth, signIn, signOut } = NextAuth({
     Credentials({
       async authorize(credentials) {
         const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6) })
+          .object({
+            email: z.string().email(),
+            password: z.string().min(6),
+          })
           .safeParse(credentials);
 
-        if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
-
-          const user = await getUser(email);
-          if (!user) return null;
-          console.log('Auth', user);
-
-          const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+        if (!parsedCredentials.success) {
+          throw new Error('Invalid input credentials format.');
         }
 
-        console.log('Invalid credentials');
-        return null;
+        const { email, password } = parsedCredentials.data;
+        const user = await getUser(email);
+
+        if (!user) {
+          throw new Error('No user found with the provided email.');
+        }
+        console.log('Auth', user);
+
+        const passwordsMatch = await bcrypt.compare(password, user.password);
+        if (!passwordsMatch) {
+          throw new Error('Incorrect password.');
+        }
+
+        return user;
       },
     }),
   ],
