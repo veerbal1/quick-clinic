@@ -16,7 +16,7 @@ async function DoctorDetails({
   const { status, data } = await getDoctorDetails(doctorId);
   if (status === 'failed') return notFound();
   return (
-    <div className="bg-white rounded px-4 md:px-0">
+    <div className="bg-white rounded px-4 pb-10 md:px-0">
       <h1 className="text-lg font-bold mb-4 text-muted-foreground">
         Doctor Details
       </h1>
