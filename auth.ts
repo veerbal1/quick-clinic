@@ -39,7 +39,6 @@ export const { auth, signIn, signOut } = NextAuth({
         if (!user) {
           throw new Error('No user found with the provided email.');
         }
-        console.log('Auth', user);
 
         const passwordsMatch = await bcrypt.compare(password, user.password);
         if (!passwordsMatch) {
@@ -54,13 +53,15 @@ export const { auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user, profile, session, account }) {
       // console.log('JWT', token, user, profile, session, account);
-      // if(user){
-      //   token.publicId = user.id
-      // }
+      if (user) {
+        token.publicId = user.id;
+        token.role = user.role;
+      }
       return token;
     },
     async session({ user, session, token }) {
       session.user.id = token.sub as string;
+      session.user.role = (token.role as string) || null;
       return session;
     },
   },

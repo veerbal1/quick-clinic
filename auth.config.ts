@@ -10,26 +10,41 @@ export const authConfig = {
   ],
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      const isSignPage = nextUrl.pathname === '/signup';
-      if (isSignPage) return true;
       const isLoggedIn = !!auth?.user;
-
-      if (!isLoggedIn && nextUrl.pathname !== '/') {
-        return Response.redirect(new URL('/', nextUrl));
+      const role = auth?.user.role;
+      const validPath =
+        nextUrl.pathname.startsWith('/admin') ||
+        nextUrl.pathname.startsWith('/student');
+      if (validPath) {
+        if (isLoggedIn) return true;
+        return false; // Redirect unauthenticated users to login page
+      } else if (isLoggedIn) {
+        if (role === 'admin' && nextUrl.pathname.startsWith('/admin')) {
+          return true;
+        } else if (
+          role === 'student' &&
+          nextUrl.pathname.startsWith('/student')
+        ) {
+          return true;
+        }
+        return Response.redirect(new URL(`/${role}/dashboard`, nextUrl));
       }
-
-      // Redirect unauthenticated users to the sign-in page
-      if (!isLoggedIn && nextUrl.pathname === '/') {
-        return true; // Allow access to the sign-in page if not logged in
-      }
-
-      // If the user is logged in and tries to access the sign-in page, redirect them
-      if (isLoggedIn && nextUrl.pathname === '/') {
-        return Response.redirect(new URL('/dashboard', nextUrl)); // Redirect to the dashboard or another appropriate page
-      }
-
-      // For all other cases, allow the user to access the requested URL
       return true;
+    },
+    async jwt({ token, user, profile, session, account }) {
+      if (user) {
+        token.role = user.role;
+        token.permissions = user.permissions;
+        token.approval_status = user.approval_status;
+      }
+      return token;
+    },
+    async session({ user, session, token }) {
+      session.user.id = token.sub as string;
+      session.user.role = (token.role as string) || null;
+      session.user.approval_status = token.approval_status as string;
+      console.log('SESSION', session, token);
+      return session;
     },
   },
 } satisfies NextAuthConfig;
