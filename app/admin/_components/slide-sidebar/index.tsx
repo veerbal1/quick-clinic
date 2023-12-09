@@ -3,7 +3,14 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import SidebarDashboard from '../sidebar';
 
-function SlideSidebar() {
+function SlideSidebar({
+  navLinks,
+}: {
+  navLinks: {
+    title: string;
+    link: string;
+  }[];
+}) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -13,7 +20,7 @@ function SlideSidebar() {
       </SheetTrigger>
       <SheetContent className="w-72" side="left">
         <div className="w-full pt-4">
-          <SidebarDashboard />
+          <SidebarDashboard navLinks={navLinks} />
         </div>
       </SheetContent>
     </Sheet>
