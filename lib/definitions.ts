@@ -10,3 +10,25 @@ export type User = {
   password: string;
   role: 'admin';
 };
+
+export type QuickClinicDoctor = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  specialization: string;
+  qualifications: string;
+  gender: string;
+  verifiedStatus: 'pending' | 'verified' | 'rejected';
+  doctorCode: number;
+  qrCode: string;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
+  adminId: string;
+  experience: number;
+  bio: string;
+  contactNumber: string;
+  location: string;
+  rating: number;
+};
