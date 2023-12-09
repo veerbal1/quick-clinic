@@ -43,7 +43,6 @@ export const authConfig = {
       session.user.id = token.sub as string;
       session.user.role = (token.role as string) || null;
       session.user.approval_status = token.approval_status as string;
-      console.log('SESSION', session, token);
       return session;
     },
   },
