@@ -9,12 +9,14 @@ const seedAdmin = async (client) => {
 
     await client.sql`
         DROP TABLE IF EXISTS quick_clinic_users CASCADE;
+        DROP TYPE IF EXISTS USER_ROLE;
+        CREATE TYPE USER_ROLE AS ENUM ('admin', 'doctor', 'patient');
         CREATE TABLE quick_clinic_users (
             id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
             email VARCHAR(255) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
-            role VARCHAR(100) DEFAULT 'admin',
+            role USER_ROLE NOT NULL,
             createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             updatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
@@ -23,11 +25,17 @@ const seedAdmin = async (client) => {
     console.log('Users table created');
 
     const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
+    const hashedDoctorPassword = await bcrypt.hash('12345678', 10);
     await client.sql`
-        INSERT INTO quick_clinic_users (name, email, password)
-        VALUES ('Veerbal Singh', ${process.env.ADMIN_EMAIL}, ${hashedPassword});    
+        INSERT INTO quick_clinic_users (name, email, password, role)
+        VALUES ('Veerbal Singh', ${process.env.ADMIN_EMAIL}, ${hashedPassword}, 'admin');    
     `;
-    console.log('Inserted Admin');
+    console.log('Inserted Admin Profile');
+    await client.sql`
+        INSERT INTO quick_clinic_users (name, email, password, role)
+        VALUES ('Doctor', 'veerbal1@gmail.com', ${hashedDoctorPassword}, 'doctor');
+    `;
+    console.log('Inserted Doctor Profile');
     return;
   } catch (error) {
     console.error('Error seeding quickclinic_users:', error);
@@ -38,40 +46,36 @@ const seedAdmin = async (client) => {
 const seedDoctor = async (client) => {
   try {
     await client.sql`
-        DROP TYPE IF EXISTS verifiedStatus;
-        CREATE TYPE verifiedStatus AS ENUM ('pending', 'verified', 'rejected');
         DROP TABLE IF EXISTS quick_clinic_doctors CASCADE;
+        DROP TYPE IF EXISTS VERIFIED_STATUS;
+        DROP TYPE IF EXISTS GENDER;
+        
+        CREATE TYPE VERIFIED_STATUS AS ENUM ('pending', 'verified', 'rejected');
+        CREATE TYPE GENDER AS ENUM ('male', 'female', 'other');
+        
         CREATE TABLE quick_clinic_doctors (
-            id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            email VARCHAR(255) NOT NULL UNIQUE,
-            password VARCHAR(255) NOT NULL,
-            specialization VARCHAR(255) NOT NULL,
-            qualifications TEXT,
-            gender VARCHAR(10) NOT NULL,
-            verifiedStatus verifiedStatus DEFAULT 'pending',
-            doctorCode NUMERIC(8, 0) UNIQUE,
-            qrCode VARCHAR(255) UNIQUE,
-            role VARCHAR(100) DEFAULT 'doctor',
-            createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-            updatedAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-            adminId UUID REFERENCES quick_clinic_users(id) ON DELETE CASCADE,
-            experience INT,
-            bio TEXT,
-            contactNumber VARCHAR(20),
-            location VARCHAR(255),
-            rating FLOAT
-        );
+          doctorId UUID PRIMARY KEY REFERENCES quick_clinic_users(id) ON DELETE CASCADE,
+          gender GENDER NOT NULL,
+          specialization VARCHAR(255) NOT NULL,
+          qualifications TEXT,
+          verifiedStatus VERIFIED_STATUS DEFAULT 'pending',
+          doctorCode NUMERIC(8, 0) UNIQUE,
+          qrCode VARCHAR(255) UNIQUE,
+          experience INT,
+          bio TEXT,
+          contactNumber VARCHAR(20),
+          location VARCHAR(255),
+          rating FLOAT
+      );
     `;
 
     console.log('Doctors table created');
 
-    const hashedPassword = await bcrypt.hash('12345678', 10);
     await client.sql`
-      INSERT INTO quick_clinic_doctors (name, email, password, specialization, qualifications, gender, verifiedStatus, doctorCode, qrCode, role, createdAt, updatedAt, adminId, experience, bio, contactNumber, location, rating)
-      VALUES ('Veerbal Singh', 'veerbal1@gmail.com', ${hashedPassword}, 'Cardiology', 'MBBS, MD', 'Male', 'pending', 12345678, 'ABC123', 'doctor', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, (SELECT id FROM quick_clinic_users WHERE email = ${process.env.ADMIN_EMAIL}), 5, 'Experienced cardiologist', '+1234567890', 'New York', 4.5);    
+      INSERT INTO quick_clinic_doctors (doctorId, gender ,specialization, qualifications, verifiedStatus, doctorCode, qrCode, experience, bio, contactNumber, location, rating)
+      VALUES ((SELECT id FROM quick_clinic_users WHERE email = 'veerbal1@gmail.com'), 'male','Cardiology', 'MBBS, MD', 'pending', 12345678, 'ABC123', 5, 'Experienced cardiologist', '+1234567890', 'New York', 4.5);    
     `;
-    console.log('Inserted Doctor');
+    console.log('Inserted Doctor details');
     return;
   } catch (error) {
     console.error('Error seeding quickclinic_doctors:', error);
