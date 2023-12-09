@@ -33,7 +33,7 @@ const seedAdmin = async (client) => {
     console.log('Inserted Admin Profile');
     await client.sql`
         INSERT INTO quick_clinic_users (name, email, password, role)
-        VALUES ('Doctor', 'veerbal1@gmail.com', ${hashedDoctorPassword}, 'doctor');
+        VALUES ('Veerbal Singh', 'veerbal1@gmail.com', ${hashedDoctorPassword}, 'doctor');
     `;
     console.log('Inserted Doctor Profile');
     return;
@@ -72,8 +72,21 @@ const seedDoctor = async (client) => {
     console.log('Doctors table created');
 
     await client.sql`
-      INSERT INTO quick_clinic_doctors (doctorId, gender ,specialization, qualifications, verifiedStatus, doctorCode, qrCode, experience, bio, contactNumber, location, rating)
-      VALUES ((SELECT id FROM quick_clinic_users WHERE email = 'veerbal1@gmail.com'), 'male','Cardiology', 'MBBS, MD', 'pending', 12345678, 'ABC123', 5, 'Experienced cardiologist', '+1234567890', 'New York', 4.5);    
+      INSERT INTO quick_clinic_doctors (doctorId, gender, specialization, qualifications, verifiedStatus, doctorCode, qrCode, experience, bio, contactNumber, location, rating)
+      VALUES (
+        (SELECT id FROM quick_clinic_users WHERE email = 'veerbal1@gmail.com'),
+        'male',
+        'Cardiologist, Interventional Cardiologist, Internal Medicine',
+        'MBBS, MD - General Medicine, DM - Cardiology',
+        'pending',
+        '12345678',
+        '12345678',
+         5,
+        'Experience over 10 years in the field of Cardiology and Internal Medicine with special interest in Interventional Cardiology. Have been trained in the field of Cardiology at the prestigious Escorts Heart Institute and Research Centre, New Delhi. Have been trained in the field of Internal Medicine at the prestigious Post Graduate Institute of Medical Education and Research, Chandigarh',
+        '9876543210',
+        'Sector 16, Chandigarh',
+         4.5
+      );    
     `;
     console.log('Inserted Doctor details');
     return;
