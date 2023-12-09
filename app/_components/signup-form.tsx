@@ -29,8 +29,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SelectContent } from '@radix-ui/react-select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 
 const formSchema = z
   .object({
