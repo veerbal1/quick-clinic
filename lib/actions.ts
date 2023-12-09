@@ -39,13 +39,13 @@ export async function signUpAction(
     console.log('Validated data', validatedData);
 
     const { rowCount, rows: singleUser } =
-      await client.sql`SELECT id FROM spendwise_users WHERE email = ${validatedData.email};`;
+      await client.sql`SELECT id FROM quick_clinic_users WHERE email = ${validatedData.email};`;
     console.log('email query ran');
     if (rowCount) return 'User already exists';
 
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
     const { rows } = await client.sql`
-      INSERT INTO spendwise_users(name, email, password) VALUES(${validatedData.name}, ${validatedData.email}, ${hashedPassword});`;
+      INSERT INTO quick_clinic_users(name, email, password) VALUES(${validatedData.name}, ${validatedData.email}, ${hashedPassword});`;
     console.log(rows);
     success = true;
     console.log('User Submitted successfully');
