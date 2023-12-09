@@ -6,7 +6,9 @@ import Link from 'next/link';
 function VerifyDoctors() {
   return (
     <div className="flex flex-col gap-4">
-      <h1>Doctor Verification Page</h1>
+      <h1>
+        <span className="text-2xl font-bold">Verify Doctors</span>
+      </h1>
       <Table
         caption="List of Doctors"
         rows={[
