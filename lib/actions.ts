@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { createClient } from '@vercel/postgres';
 import signUpFormSchema from '@/app/_components/signup-form/schema';
+import { revalidatePath } from 'next/cache';
 
 export async function authenticate(
   prevState: string | undefined,
@@ -101,4 +102,50 @@ export async function signUpAction(
 
 export async function logout() {
   await signOut();
+}
+
+export async function verifyDoctor(id: string) {
+  try {
+    const client = createClient();
+    await client.connect();
+    await client.sql`UPDATE quick_clinic_doctors SET verifiedStatus = 'verified' WHERE doctorId = ${id};`;
+    revalidatePath(`/admin/doctor/${id}`);
+    return {
+      status: 'success',
+      id: Math.random().toString(), // To use in useEffect array dependency to show the toast again
+      message: 'Doctor verified successfully',
+    };
+    await client.end();
+  } catch (error) {
+    // Handle the error here
+    console.error(error);
+    return {
+      status: 'failed',
+      id: Math.random().toString(), // To use in useEffect array dependency to show the toast again
+      message: 'Something went wrong',
+    };
+  }
+}
+
+export async function rejectDoctor(id: string) {
+  try {
+    const client = createClient();
+    await client.connect();
+    await client.sql`UPDATE quick_clinic_doctors SET verifiedStatus = 'rejected' WHERE doctorId = ${id};`;
+    revalidatePath(`/admin/doctor/${id}`);
+    await client.end();
+    return {
+      status: 'success',
+      id: Math.random().toString(), // To use in useEffect array dependency to show the toast again
+      message: 'Doctor rejected successfully',
+    };
+  } catch (error) {
+    // Handle the error here
+    console.error(error);
+    return {
+      status: 'failed',
+      id: Math.random().toString(), // To use in useEffect array dependency to show the toast again
+      message: 'Something went wrong',
+    };
+  }
 }

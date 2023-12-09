@@ -3,6 +3,8 @@ import { getDoctorDetails } from '@/lib/db-queries';
 import { cn } from '@/lib/utils';
 import { CheckIcon } from '@radix-ui/react-icons';
 import { notFound } from 'next/navigation';
+import VerifyDoctorButton from './_components/verify-doctor-btn';
+import RejectDoctorButton from './_components/reject-doctor-btn';
 
 async function DoctorDetails({
   params,
@@ -24,7 +26,7 @@ async function DoctorDetails({
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-green-600">
           Dr. {data?.name}
           <span className="text-sm text-muted-foreground font-normal">
-            {data?.gender === 'male' ? '(He/Him)' : 'She/Her'}
+            {data?.gender === 'male' ? '(He/Him)' : '(She/Her)'}
           </span>
         </h1>
         <p className="text-sm text-muted-foreground">{data?.qualifications}</p>
@@ -101,10 +103,18 @@ async function DoctorDetails({
           </div>
         </div>
         <div className="mt-4 w-full flex justify-end">
-          <Button variant="destructive">Reject</Button>
-          <Button variant="default" className="ml-2">
-            Verify
-          </Button>
+          {data?.verifiedstatus === 'verified' && (
+            <RejectDoctorButton id={data?.id as string} />
+          )}
+          {data?.verifiedstatus === 'rejected' && (
+            <VerifyDoctorButton id={data?.id as string} />
+          )}
+          {data?.verifiedstatus === 'pending' && (
+            <>
+              <RejectDoctorButton id={data?.id as string} />
+              <VerifyDoctorButton id={data?.id as string} />
+            </>
+          )}
         </div>
       </div>
     </div>
