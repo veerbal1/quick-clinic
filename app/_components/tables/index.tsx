@@ -14,7 +14,7 @@ function Table({
   columns,
 }: {
   caption: string;
-  rows: any[];
+  rows: any[] | undefined;
   columns: {
     className?: string;
     header: string;
@@ -32,7 +32,7 @@ function Table({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {rows.map((row) => (
+        {rows?.map((row) => (
           <TableRow>
             {columns.map((column) => (
               <TableCell className={column.className}>
