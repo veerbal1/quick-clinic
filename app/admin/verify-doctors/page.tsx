@@ -1,13 +1,13 @@
 import Table from '@/app/_components/tables';
 import { Button } from '@/components/ui/button';
-import { CheckIcon, Cross1Icon, FileIcon } from '@radix-ui/react-icons';
+import { FileIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 
 function VerifyDoctors() {
   return (
     <div className="flex flex-col gap-4">
       <h1>
-        <span className="text-2xl font-bold">Verify Doctors</span>
+        <span className="text-lg font-bold text-muted-foreground">Active/Inactive Doctors List</span>
       </h1>
       <Table
         caption="List of Doctors"
