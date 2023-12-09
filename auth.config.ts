@@ -14,7 +14,7 @@ export const authConfig = {
       const role = auth?.user.role;
       const validPath =
         nextUrl.pathname.startsWith('/admin') ||
-        nextUrl.pathname.startsWith('/student');
+        nextUrl.pathname.startsWith('/doctor');
       if (validPath) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
@@ -22,8 +22,8 @@ export const authConfig = {
         if (role === 'admin' && nextUrl.pathname.startsWith('/admin')) {
           return true;
         } else if (
-          role === 'student' &&
-          nextUrl.pathname.startsWith('/student')
+          role === 'doctor' &&
+          nextUrl.pathname.startsWith('/doctor')
         ) {
           return true;
         }
