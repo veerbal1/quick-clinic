@@ -35,19 +35,18 @@ async function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="w-full">
       <Header menu={!underProcess && <SlideSidebar navLinks={navLinks} />} />
-      {!underProcess && (
-        <div className="pt-5 p-5 flex gap-2">
-          <div className="hidden md:block">
-            <SidebarDashboard navLinks={navLinks} />
+      <div className='pb-14'>
+        {!underProcess && (
+          <div className="pt-5 p-5 flex gap-2">
+            <div className="hidden md:block">
+              <SidebarDashboard navLinks={navLinks} />
+            </div>
+            <div className="flex-1">{children}</div>
           </div>
-          <div className="flex-1">
-            {JSON.stringify(data)}
-            {children}
-          </div>
-        </div>
-      )}
-      {pending && <PendingStatus doctorName={data.name} />}
-      {rejected && <Rejected />}
+        )}
+        {pending && <PendingStatus doctorName={data.name} />}
+        {rejected && <Rejected />}
+      </div>
     </div>
   );
 }
