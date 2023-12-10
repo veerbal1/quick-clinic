@@ -1,5 +1,6 @@
 import { getDoctorDetailsByDoctorCode } from '@/lib/db-queries';
 import DoctorProfile from './_component/doctor-profile';
+import PatientForm from './_component/patient-form';
 
 async function Appointment({ params }: { params: { doctorId: string } }) {
   const { status, message, data } = await getDoctorDetailsByDoctorCode(
@@ -15,7 +16,9 @@ async function Appointment({ params }: { params: { doctorId: string } }) {
         verified={data?.verifiedstatus === 'verified'}
         experience={data?.experience}
       />
-      <div className="content mt-4">daslkj</div>
+      <div className="content mt-4">
+        <PatientForm />
+      </div>
     </div>
   );
 }
