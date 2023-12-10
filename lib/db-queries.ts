@@ -170,3 +170,11 @@ export const getDoctorDetailsByDoctorCode = async (doctorCode: string) => {
     };
   }
 };
+
+// Get patient details using mobile number
+export const getPatientDetailsByMobileNumber = async (mobileNumber: string) => {
+  const client = createClient();
+  await client.connect();
+
+  
+};

@@ -17,7 +17,7 @@ async function Appointment({ params }: { params: { doctorId: string } }) {
         experience={data?.experience}
       />
       <div className="content mt-4">
-        <PatientForm />
+        <PatientForm doctorId={params.doctorId} />
       </div>
     </div>
   );

@@ -5,9 +5,9 @@ import { Suspense, useState } from 'react';
 import MobileVerification from './mobile-verification';
 import PostMobileVerification from './post-mobile-verification';
 
-function PatientForm() {
+function PatientForm({ doctorId }: { doctorId: string }) {
   const [mobileVerificationState, setMobileVerification] = useState({
-    mobileNumber: '',
+    mobileNumber: '1234567890',
     verified: false,
   });
   return (
@@ -24,6 +24,7 @@ function PatientForm() {
       )} */}
       <PostMobileVerification
         mobileNumber={mobileVerificationState.mobileNumber}
+        doctorId={doctorId}
       />
     </div>
   );
