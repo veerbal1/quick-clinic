@@ -31,8 +31,8 @@ import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
-import { json } from 'stream/consumers';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -51,6 +51,7 @@ function NewPatient({
   mobileNumber: string;
   doctorId: string;
 }) {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   console.log('mobileNumber', mobileNumber);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -62,6 +63,7 @@ function NewPatient({
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     const data = await fetch('/api/submit-new-patient', {
@@ -78,13 +80,19 @@ function NewPatient({
       console.log('Appointment created', data);
       if (data.data.status === 'success') {
         router.push('/appointment-token/' + data.data.appointmentId);
+        setLoading(false);
       }
     }
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+      <form
+        aria-disabled={loading}
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-2"
+      >
         <FormField
+          disabled={loading}
           control={form.control}
           name="mobileNumber"
           render={({ field }) => (
@@ -98,6 +106,7 @@ function NewPatient({
           )}
         />
         <FormField
+          disabled={loading}
           control={form.control}
           name="name"
           render={({ field }) => (
@@ -111,6 +120,7 @@ function NewPatient({
           )}
         />
         <FormField
+          disabled={loading}
           control={form.control}
           name="gender"
           render={({ field }) => (
@@ -132,6 +142,7 @@ function NewPatient({
           )}
         />
         <FormField
+          disabled={loading}
           control={form.control}
           name="dateOfBirth"
           render={({ field }) => (
@@ -171,6 +182,7 @@ function NewPatient({
           )}
         />
         <FormField
+          disabled={loading}
           control={form.control}
           name="address"
           render={({ field }) => (
@@ -184,6 +196,7 @@ function NewPatient({
           )}
         />
         <FormField
+          disabled={loading}
           control={form.control}
           name="email"
           render={({ field }) => (
@@ -197,6 +210,7 @@ function NewPatient({
           )}
         />
         <FormField
+          disabled={loading}
           control={form.control}
           name="healthIssues"
           render={({ field }) => (
@@ -212,7 +226,9 @@ function NewPatient({
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button disabled={loading} type="submit">
+          Submit
+        </Button>
       </form>
     </Form>
   );
