@@ -127,12 +127,40 @@ const seedPatient = async (client) => {
   }
 };
 
+const seedToken = async (client) => {
+  try {
+    await client.sql`
+      DROP TABLE IF EXISTS quick_clinic_tokens CASCADE;
+
+      CREATE TABLE quick_clinic_tokens (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        doctorId UUID REFERENCES quick_clinic_doctors(doctorId) ON DELETE CASCADE,
+        currentTokenNumber INT NOT NULL,
+        date DATE NOT NULL
+      );`;
+    console.log('Tokens table created');
+
+    await client.sql`
+      INSERT INTO quick_clinic_tokens (doctorId, currentTokenNumber, date)
+      VALUES (
+        (SELECT doctorId FROM quick_clinic_doctors WHERE doctorId = (SELECT id FROM quick_clinic_users WHERE email = 'veerbal1@gmail.com')),
+        1,
+        '12/10/2023'
+      );`;
+    console.log('Inserted Token details');
+  } catch (error) {
+    console.error('Error seeding quickclinic_tokens:', error);
+    throw error;
+  }
+};
+
 const main = async () => {
   const client = await db.connect();
 
   // await seedAdmin(client);
   // await seedDoctor(client);
-  await seedPatient(client);
+  // await seedPatient(client);
+  // await seedToken(client);
 
   await client.end();
 };
