@@ -1,5 +1,5 @@
 import { getDoctorDetailsByDoctorCode } from '@/lib/db-queries';
-import DoctorProfile from './_component/doctor-profile';
+import DoctorProfile from '../../_components/card/doctor-profile';
 import PatientForm from './_component/patient-form';
 
 async function Appointment({ params }: { params: { doctorId: string } }) {
