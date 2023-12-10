@@ -46,7 +46,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       )}
-      {pending && <PendingStatus />}
+      {pending && <PendingStatus doctorName={data.name} />}
       {rejected && <Rejected />}
     </div>
   );
