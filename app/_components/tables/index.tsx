@@ -27,15 +27,17 @@ function Table({
       <TableHeader>
         <TableRow>
           {columns.map((column) => (
-            <TableHead className={column.className}>{column.value}</TableHead>
+            <TableHead key={column.header} className={column.className}>
+              {column.value}
+            </TableHead>
           ))}
         </TableRow>
       </TableHeader>
       <TableBody>
         {rows?.map((row) => (
-          <TableRow>
+          <TableRow key={row.id}>
             {columns.map((column) => (
-              <TableCell className={column.className}>
+              <TableCell key={column.header} className={column.className}>
                 {row[column.header]}
               </TableCell>
             ))}
