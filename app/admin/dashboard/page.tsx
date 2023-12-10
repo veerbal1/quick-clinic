@@ -1,6 +1,6 @@
 function AdminPage() {
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 pt-0">
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
       <p className="mb-2">This is some dummy content related to doctors.</p>
       <ul className="list-disc pl-4">
