@@ -1,6 +1,6 @@
 function PendingStatus({ doctorName }: { doctorName: string }) {
   return (
-    <div className="flex justify-center px-6">
+    <div className="flex justify-center px-12">
       <div className="max-w-2xl mx-auto mt-4">
         <h3 className="mt-8 scroll-m-20 text-2xl font-semibold tracking-tight text-left">
           Dear Dr. {doctorName}
