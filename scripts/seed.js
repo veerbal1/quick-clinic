@@ -96,11 +96,43 @@ const seedDoctor = async (client) => {
   }
 };
 
+const seedPatient = async (client) => {
+  try {
+    await client.query(`
+      DROP TABLE IF EXISTS quick_clinic_patients CASCADE;
+
+      CREATE TABLE quick_clinic_patients (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        name VARCHAR(255) NOT NULL,
+        dateOfBirth DATE NOT NULL,
+        gender GENDER NOT NULL,
+        address TEXT,
+        mobileNumber VARCHAR(10) NOT NULL UNIQUE,
+        email VARCHAR(255) UNIQUE
+      );
+    `);
+    console.log('Patients table created');
+
+    // Insert two users
+    await client.query(`
+      INSERT INTO quick_clinic_patients (name, dateOfBirth, gender, address, mobileNumber, email)
+      VALUES
+        ('John Doe', '01/03/1986', 'male', '123 Main St', '1234567890', 'john.doe@example.com'),
+        ('Jane Smith', '06/07/1978', 'female', '456 Elm St', '9876543210', 'jane.smith@example.com');
+    `);
+    console.log('Two users inserted');
+  } catch (error) {
+    console.error('Error seeding quickclinic_patients:', error);
+    throw error;
+  }
+};
+
 const main = async () => {
   const client = await db.connect();
 
-  await seedAdmin(client);
-  await seedDoctor(client);
+  // await seedAdmin(client);
+  // await seedDoctor(client);
+  await seedPatient(client);
 
   await client.end();
 };
