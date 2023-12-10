@@ -16,7 +16,7 @@ async function AvatarUI() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Avatar className="">
+        <Avatar className="cursor-pointer">
           <AvatarFallback>
             {getInitialsFromName(user?.name as string)}
           </AvatarFallback>
