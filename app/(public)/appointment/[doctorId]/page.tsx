@@ -7,7 +7,7 @@ async function Appointment({ params }: { params: { doctorId: string } }) {
   );
   if (status === 'failed') return <div>{message}</div>;
   return (
-    <div className="px-6 flex justify-start w-full">
+    <div className="px-6 flex flex-col justify-start w-full">
       <DoctorProfile
         name={data?.name}
         specialization={data?.specialization}
@@ -15,6 +15,7 @@ async function Appointment({ params }: { params: { doctorId: string } }) {
         verified={data?.verifiedstatus === 'verified'}
         experience={data?.experience}
       />
+      <div className="content mt-4">daslkj</div>
     </div>
   );
 }

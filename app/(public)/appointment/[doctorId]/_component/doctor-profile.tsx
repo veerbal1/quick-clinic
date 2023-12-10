@@ -21,7 +21,7 @@ function DoctorProfile({
   rating: number;
 }) {
   return (
-    <div className="flex justify-start pt-6">
+    <div className="flex justify-start pt-6 sticky top-0">
       <Card>
         <CardHeader className="grid items-start gap-4 space-y-0">
           <div className="space-y-1">
