@@ -3,8 +3,17 @@ import { Button } from '@/components/ui/button';
 import { getDoctorsList } from '@/lib/db-queries';
 import { FileIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
-async function VerifyDoctors() {
+const VerifyDoctors = async () => {
+  return (
+    <Suspense fallback={<div className="flex flex-col gap-4">Loading...</div>}>
+      <Content />
+    </Suspense>
+  );
+};
+
+async function Content() {
   const { data } = await getDoctorsList();
   return (
     <div className="flex flex-col gap-4">
