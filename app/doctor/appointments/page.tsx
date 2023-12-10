@@ -16,7 +16,7 @@ async function Appointments() {
     <div className="flex flex-col gap-4">
       <h1>
         <span className="text-lg font-bold text-muted-foreground">
-          Today's Appointments
+          Today&apos;s Appointments
         </span>
       </h1>
       <Table

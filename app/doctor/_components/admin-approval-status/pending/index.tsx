@@ -6,7 +6,7 @@ function PendingStatus({ doctorName }: { doctorName: string }) {
           Dear Dr. {doctorName}
         </h3>
         <p className="leading-7 [&:not(:first-child)]:mt-6 text-justify">
-          Thank you for registering with QuickClinic! We're thrilled to have you
+          Thank you for registering with QuickClinic! We&apos;re thrilled to have you
           on board as a valued member of our medical community.
         </p>
         <p className="leading-7 [&:not(:first-child)]:mt-6 text-justify">
@@ -30,12 +30,12 @@ function PendingStatus({ doctorName }: { doctorName: string }) {
           </li>
           <li>
             <b>Additional Information:</b> If our team requires any additional
-            information or clarification, we'll reach out to you promptly.
+            information or clarification, we&lsquo;ll reach out to you promptly.
           </li>
         </ul>
         <p className="leading-7 [&:not(:first-child)]:mt-6 text-justify">
           We appreciate your patience as we ensure the integrity of our medical
-          community. Once verified, you'll have full access to your dashboard,
+          community. Once verified, you&apos;ll have full access to your dashboard,
           including appointment management and patient interactions.
         </p>
         <p className="leading-7 [&:not(:first-child)]:mt-6 text-justify">
