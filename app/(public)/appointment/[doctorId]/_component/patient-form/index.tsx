@@ -1,8 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import MobileVerification from './mobile-verification';
+import PostMobileVerification from './post-mobile-verification';
 
 function PatientForm() {
   const [mobileVerificationState, setMobileVerification] = useState({
@@ -11,12 +12,19 @@ function PatientForm() {
   });
   return (
     <div>
-      {!mobileVerificationState.verified && (
+      {/* {!mobileVerificationState.verified && (
         <MobileVerification setMobileVerification={setMobileVerification} />
-      )}
-      {mobileVerificationState.verified && (
-        <div>Mobile Verified - {mobileVerificationState.mobileNumber}</div>
-      )}
+      )} */}
+      {/* {mobileVerificationState.verified && (
+        <Suspense fallback={<div>Loading Details...</div>}>
+          <PostMobileVerification
+            mobileNumber={mobileVerificationState.mobileNumber}
+          />
+        </Suspense>
+      )} */}
+      <PostMobileVerification
+        mobileNumber={mobileVerificationState.mobileNumber}
+      />
     </div>
   );
 }
