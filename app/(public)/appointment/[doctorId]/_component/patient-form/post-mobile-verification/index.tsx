@@ -47,7 +47,7 @@ function PostMobileVerification({
       {patientProfile ? (
         <ExistingPatient doctorId={doctorId} patientProfile={patientProfile} />
       ) : (
-        <NewPatient mobileNumber={mobileNumber} />
+        <NewPatient doctorId={doctorId} mobileNumber={mobileNumber} />
       )}
     </div>
   );
