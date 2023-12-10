@@ -4,6 +4,7 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation'
 import {
   Form,
   FormControl,
@@ -17,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
 import { PatientProfile } from '../../type';
+import { redirect } from 'next/navigation';
 
 const healthIssuesSchema = z.object({
   healthIssues: z
@@ -32,6 +34,7 @@ function HealthForm({
   doctorId: string;
   patientProfile: PatientProfile;
 }) {
+  const router = useRouter()
   const [loading, setLoading] = useState(false);
   // 1. Define your form.
   const form = useForm<z.infer<typeof healthIssuesSchema>>({
@@ -59,7 +62,10 @@ function HealthForm({
       .then((res) => res.json())
       .then((data) => {
         setLoading(false);
-        console.log(data);
+        console.log('Appointment created', data)
+        if (data.data.status === 'success') {
+          router.push('/appointment-token/' + data.data.appointmentId)
+        }
       });
     console.log(values);
   }
@@ -82,9 +88,7 @@ function HealthForm({
             </FormItem>
           )}
         />
-        <Button  type="submit">
-          Submit
-        </Button>
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );
