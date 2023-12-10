@@ -94,3 +94,46 @@ export const getDoctorDetails = async (doctorId: string) => {
     };
   }
 };
+
+export const getAppointments = async (doctorId: string, date: Date) => {
+  const client = createClient();
+  await client.connect();
+  try {
+    const { rows } = await client.sql`
+    SELECT 
+    a.id as appointmentId,
+    a.date,
+    a.tokennumber,
+    a.status,
+    a.healthissues,
+    a.doctorremarks,
+
+    p.name,
+    p.dateofbirth,
+    p.gender,
+    p.address,
+    p.mobilenumber
+FROM 
+    quick_clinic_appointments AS a
+INNER JOIN
+    quick_clinic_patients AS p
+ON a.patientId = p.id
+WHERE
+    a.doctorId = ${doctorId} 
+AND
+    a.date = ${date.toDateString()}
+    ;
+        `;
+    console.log('Appointments', rows);
+    return {
+      status: 'success',
+      data: rows,
+      message: 'Appointments fetched successfully',
+    };
+  } catch (error) {
+    return {
+      status: 'failed',
+      message: 'Something went wrong',
+    };
+  }
+};
