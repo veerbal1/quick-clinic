@@ -154,6 +154,44 @@ const seedToken = async (client) => {
   }
 };
 
+const seedAppointment = async (client) => {
+  try {
+    await client.sql`
+      DROP TABLE IF EXISTS quick_clinic_appointments CASCADE;
+      DROP TYPE IF EXISTS APPOINTMENT_STATUS;
+
+      CREATE TYPE APPOINTMENT_STATUS AS ENUM ('scheduled', 'completed', 'cancelled');
+      CREATE TABLE quick_clinic_appointments (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        patientId UUID REFERENCES quick_clinic_patients(id) ON DELETE CASCADE,
+        doctorId UUID REFERENCES quick_clinic_doctors(doctorId) ON DELETE CASCADE,
+        date DATE NOT NULL,
+        tokenNumber INT NOT NULL,
+        status APPOINTMENT_STATUS NOT NULL DEFAULT 'scheduled',
+        healthIssues TEXT,
+        doctorRemarks TEXT
+      );
+    `;
+    console.log('Appointments table created');
+
+    await client.sql`
+      INSERT INTO quick_clinic_appointments (patientId, doctorId, date, tokenNumber, status, healthIssues, doctorRemarks)
+      VALUES (
+        (SELECT id FROM quick_clinic_patients WHERE email = 'john.doe@example.com'),
+        (SELECT doctorId FROM quick_clinic_doctors WHERE doctorId = (SELECT id FROM quick_clinic_users WHERE email = 'veerbal1@gmail.com')),
+        '12/10/2023',
+        1,
+        'scheduled',
+        'Headache',
+        'Take rest'
+      );`;
+    console.log('Inserted Appointment details');
+  } catch (error) {
+    console.error('Error seeding quickclinic_appointments:', error);
+    throw error;
+  }
+};
+
 const main = async () => {
   const client = await db.connect();
 
@@ -161,6 +199,7 @@ const main = async () => {
   // await seedDoctor(client);
   // await seedPatient(client);
   // await seedToken(client);
+  await seedAppointment(client);
 
   await client.end();
 };
