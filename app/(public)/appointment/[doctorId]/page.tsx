@@ -8,7 +8,7 @@ async function Appointment({ params }: { params: { doctorId: string } }) {
   );
   if (status === 'failed') return <div>{message}</div>;
   return (
-    <div className="px-6 flex flex-col justify-start w-full">
+    <div className="px-6 flex flex-col justify-start w-full pb-24">
       <DoctorProfile
         name={data?.name}
         specialization={data?.specialization}
