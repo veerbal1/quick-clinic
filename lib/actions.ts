@@ -108,16 +108,32 @@ export async function verifyDoctor(id: string) {
   try {
     const client = createClient();
     await client.connect();
-    // Generate a 8 digit random number and set it as the doctorCode
-    const doctorCode = Math.floor(10000000 + Math.random() * 90000000);
-    await client.sql`UPDATE quick_clinic_doctors SET verifiedStatus = 'verified', doctorCode = ${doctorCode}, qrCode = ${doctorCode} WHERE doctorId = ${id};`;
-    revalidatePath(`/admin/doctor/${id}`);
-    return {
-      status: 'success',
-      id: Math.random().toString(), // To use in useEffect array dependency to show the toast again
-      message: 'Doctor verified successfully',
-    };
-    await client.end();
+    // Check if doctorCode and qrCode are already set
+    const { rows } =
+      await client.sql`SELECT doctorCode, qrCode FROM quick_clinic_doctors WHERE doctorId = ${id};`;
+    const doctor = rows[0];
+    if (doctor.doctorcode && doctor.qrcode) {
+      //  Just set the verifiedStatus to verified
+      await client.sql`UPDATE quick_clinic_doctors SET verifiedStatus = 'verified' WHERE doctorId = ${id};`;
+      revalidatePath(`/admin/doctor/${id}`);
+      await client.end();
+      return {
+        status: 'success',
+        id: Math.random().toString(), // To use in useEffect array dependency to show the toast again
+        message: 'Doctor verified successfully',
+      };
+    } else {
+      //  Set the verifiedStatus to verified and generate a new doctorCode and qrCode
+      const doctorCode = Math.floor(10000000 + Math.random() * 90000000);
+      await client.sql`UPDATE quick_clinic_doctors SET verifiedStatus = 'verified', doctorCode = ${doctorCode}, qrCode = ${doctorCode} WHERE doctorId = ${id};`;
+      revalidatePath(`/admin/doctor/${id}`);
+      await client.end();
+      return {
+        status: 'success',
+        id: Math.random().toString(), // To use in useEffect array dependency to show the toast again
+        message: 'Doctor verified successfully',
+      };
+    }
   } catch (error) {
     // Handle the error here
     console.error(error);
