@@ -19,7 +19,6 @@ async function Appointments() {
           Today's Appointments
         </span>
       </h1>
-      {JSON.stringify(data)}
       <Table
         caption="Today's Appointments"
         rows={data?.map((patient) => ({
