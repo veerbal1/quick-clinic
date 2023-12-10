@@ -137,3 +137,36 @@ AND
     };
   }
 };
+
+// Get doctor details using doctor code for public appoinment
+export const getDoctorDetailsByDoctorCode = async (doctorCode: string) => {
+  try {
+    const client = createClient();
+    await client.connect();
+    const { rows } = await client.sql`
+    SELECT u.name, d.specialization, d.verifiedstatus, d.doctorcode, d.contactnumber, d.location, d.rating, d.experience
+    FROM quick_clinic_doctors AS d
+    INNER JOIN quick_clinic_users AS u
+    ON d.doctorId = u.id
+    WHERE d.doctorCode = ${doctorCode}
+    `;
+    if (rows.length === 0) {
+      return {
+        status: 'failed',
+        message: 'Doctor not found',
+        data: null,
+      };
+    }
+    return {
+      status: 'success',
+      data: rows[0],
+      message: 'Doctor details fetched successfully',
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 'failed',
+      message: 'Something went wrong',
+    };
+  }
+};
