@@ -41,6 +41,23 @@ async function VerifyDoctors() {
             value: 'Location',
           },
           {
+            header: 'verifiedstatus',
+            value: 'Verification Status',
+            cell: (row) => (
+              <span
+                className={`${
+                  row.verifiedstatus === 'verified'
+                    ? 'text-green-500'
+                    : 'text-red-500'
+                }`}
+              >
+                {row.verifiedstatus === 'verified'
+                  ? 'Verified'
+                  : 'Not Verified'}
+              </span>
+            ),
+          },
+          {
             className: 'text-right',
             header: 'actions',
             value: 'Actions',
