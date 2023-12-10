@@ -71,7 +71,6 @@ const MobileVerification = ({
           <FormField
             control={form.control}
             name="mobileNumber"
-            disabled={Boolean(otp)}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Mobile Number</FormLabel>
@@ -79,7 +78,7 @@ const MobileVerification = ({
                   <Input
                     aria-label="Mobile Number"
                     type="number"
-                    disabled={Boolean(otp)}
+                    readOnly={Boolean(otp)}
                     {...field}
                     pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                   />
