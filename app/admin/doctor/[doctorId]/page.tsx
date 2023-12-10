@@ -5,14 +5,23 @@ import { CheckIcon } from '@radix-ui/react-icons';
 import { notFound } from 'next/navigation';
 import VerifyDoctorButton from './_components/verify-doctor-btn';
 import RejectDoctorButton from './_components/reject-doctor-btn';
+import { Suspense } from 'react';
 
-async function DoctorDetails({
-  params,
-}: {
+type Props = {
   params: {
     doctorId: string;
   };
-}) {
+};
+
+async function DoctorDetails(props: Props) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Content {...props} />
+    </Suspense>
+  );
+}
+
+async function Content({ params }: Props) {
   const { doctorId } = params;
   if (!doctorId) return notFound();
   const { status, data } = await getDoctorDetails(doctorId);
