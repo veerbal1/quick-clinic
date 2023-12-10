@@ -172,9 +172,58 @@ export const getDoctorDetailsByDoctorCode = async (doctorCode: string) => {
 };
 
 // Get patient details using mobile number
-export const getPatientDetailsByMobileNumber = async (mobileNumber: string) => {
-  const client = createClient();
-  await client.connect();
 
-  
+export const getAppointmentDetails = async (appointmentId: string) => {
+  try {
+    const client = createClient();
+    await client.connect();
+
+    const { rows } = await client.sql`
+      SELECT
+        aq.id AS appointment_id,
+        aq.tokenNumber AS token_number,
+        aq.date AS appointment_date,
+        aq.status AS appointment_status,
+        aq.healthIssues AS appointment_health_issue,
+        u.name AS doctor_name,
+        u.email AS doctor_email,
+        u.role AS doctor_role,
+        d.gender AS doctor_gender,
+        d.specialization AS doctor_specialization,
+        d.verifiedStatus AS doctor_verified_status,
+        d.doctorCode AS doctor_code,
+        d.experience AS doctor_experience,
+        d.contactNumber AS doctor_contact_number,
+        d.location AS doctor_location,
+        d.rating AS doctor_rating,
+        p.name AS patient_name,
+        p.dateOfBirth AS patient_dob,
+        p.gender AS patient_gender,
+        p.address AS patient_address
+      FROM quick_clinic_appointments AS aq
+      INNER JOIN quick_clinic_doctors AS d ON aq.doctorId = d.doctorId
+      INNER JOIN quick_clinic_patients AS p ON aq.patientId = p.id
+      INNER JOIN quick_clinic_users AS u ON d.doctorId = u.id
+      WHERE aq.id = ${appointmentId}
+    `;
+
+    if (rows.length === 0) {
+      return {
+        status: 'failed',
+        message: 'Appointment not found',
+        data: null,
+      };
+    }
+    return {
+      status: 'success',
+      data: rows[0],
+      message: 'Appointment details fetched successfully',
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 'failed',
+      message: 'Something went wrong',
+    };
+  }
 };
