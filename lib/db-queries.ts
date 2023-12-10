@@ -209,7 +209,7 @@ export const getAppointmentDetails = async (appointmentId: string) => {
 
     if (rows.length === 0) {
       return {
-        status: 'failed',
+        status: 'status',
         message: 'Appointment not found',
         data: null,
       };
