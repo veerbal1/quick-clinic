@@ -16,7 +16,7 @@ function PatientProfile({
 }: {
   name: string;
   timing: string;
-  age: string;
+  age: number;
   gender: string;
   healthIssues: string;
 }) {
