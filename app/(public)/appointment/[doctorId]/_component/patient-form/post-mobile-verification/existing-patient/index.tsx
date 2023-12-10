@@ -33,7 +33,7 @@ function ExistingPatient({
         </p>
       </div>
       <hr className="my-2" />
-      <HealthForm />
+      <HealthForm doctorId={doctorId} patientProfile={patientProfile} />
     </div>
   );
 }

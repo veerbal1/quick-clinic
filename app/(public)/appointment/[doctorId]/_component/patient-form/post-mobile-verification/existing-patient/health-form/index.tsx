@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useState } from 'react';
+import { PatientProfile } from '../../type';
 
 const healthIssuesSchema = z.object({
   healthIssues: z
@@ -23,7 +25,14 @@ const healthIssuesSchema = z.object({
     .max(1000, 'Please provide a maximum of 1000 characters'),
 });
 
-function HealthForm() {
+function HealthForm({
+  doctorId,
+  patientProfile,
+}: {
+  doctorId: string;
+  patientProfile: PatientProfile;
+}) {
+  const [loading, setLoading] = useState(false);
   // 1. Define your form.
   const form = useForm<z.infer<typeof healthIssuesSchema>>({
     resolver: zodResolver(healthIssuesSchema),
@@ -33,8 +42,25 @@ function HealthForm() {
   });
 
   function onSubmit(values: z.infer<typeof healthIssuesSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    setLoading(true);
+    // Patientid, doctorid, healthIssues, date, token number
+    fetch('/api/submit-new-appointment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        patientId: patientProfile.id,
+        doctorId: doctorId,
+        healthIssues: values.healthIssues,
+        date: new Date().toDateString(),
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setLoading(false);
+        console.log(data);
+      });
     console.log(values);
   }
   return (
@@ -47,7 +73,7 @@ function HealthForm() {
             <FormItem>
               <FormLabel>Health Issues</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea readOnly={loading} {...field} />
               </FormControl>
               <FormDescription>
                 Please provide a brief description of your health issues.
@@ -56,7 +82,9 @@ function HealthForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button  type="submit">
+          Submit
+        </Button>
       </form>
     </Form>
   );
