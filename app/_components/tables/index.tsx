@@ -19,6 +19,7 @@ function Table({
     className?: string;
     header: string;
     value: string | number | JSX.Element | JSX.Element[];
+    cell?: (row: any) => JSX.Element | JSX.Element[];
   }[];
 }) {
   return (
@@ -36,11 +37,20 @@ function Table({
       <TableBody>
         {rows?.map((row) => (
           <TableRow key={row.id}>
-            {columns.map((column) => (
-              <TableCell key={column.header} className={column.className}>
-                {row[column.header]}
-              </TableCell>
-            ))}
+            {columns.map((column) => {
+              if (column.cell) {
+                return (
+                  <TableCell key={column.header} className={column.className}>
+                    {column.cell(row)}
+                  </TableCell>
+                );
+              }
+              return (
+                <TableCell key={column.header} className={column.className}>
+                  {row[column.header]}
+                </TableCell>
+              );
+            })}
           </TableRow>
         ))}
       </TableBody>
