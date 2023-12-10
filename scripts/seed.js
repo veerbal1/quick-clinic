@@ -174,13 +174,27 @@ const seedAppointment = async (client) => {
     `;
     console.log('Appointments table created');
 
+    const { rows, rowCount } = await client.sql`
+        SELECT currenttokennumber FROM quick_clinic_tokens WHERE doctorid = (SELECT doctorId FROM quick_clinic_doctors WHERE doctorId = (SELECT id FROM quick_clinic_users WHERE email = 'veerbal1@gmail.com')) AND date = DATE(NOW());
+    `;
+    if (rowCount === 0) {
+      await client.sql`
+        INSERT INTO quick_clinic_tokens (doctorId, currentTokenNumber, date)
+        VALUES ((SELECT doctorId FROM quick_clinic_doctors WHERE doctorId = (SELECT id FROM quick_clinic_users WHERE email = 'veerbal1@gmail.com')), 1, DATE(NOW()));
+      `;
+    } else {
+      await client.sql`
+        UPDATE quick_clinic_tokens SET currentTokenNumber = currentTokenNumber + 1 WHERE doctorId = (SELECT doctorId FROM quick_clinic_doctors WHERE doctorId = (SELECT id FROM quick_clinic_users WHERE email = 'veerbal1@gmail.com')) AND date = DATE(NOW());
+      `;
+    }
+
     await client.sql`
       INSERT INTO quick_clinic_appointments (patientId, doctorId, date, tokenNumber, status, healthIssues, doctorRemarks)
       VALUES (
         (SELECT id FROM quick_clinic_patients WHERE email = 'john.doe@example.com'),
         (SELECT doctorId FROM quick_clinic_doctors WHERE doctorId = (SELECT id FROM quick_clinic_users WHERE email = 'veerbal1@gmail.com')),
         '12/10/2023',
-        1,
+        (SELECT currenttokennumber FROM quick_clinic_tokens WHERE doctorid = (SELECT doctorId FROM quick_clinic_doctors WHERE doctorId = (SELECT id FROM quick_clinic_users WHERE email = 'veerbal1@gmail.com')) AND date = DATE(NOW())),
         'scheduled',
         'Headache',
         'Take rest'
