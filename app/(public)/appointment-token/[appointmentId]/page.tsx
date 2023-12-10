@@ -1,6 +1,7 @@
 import { getAppointmentDetails } from '@/lib/db-queries';
 import DoctorProfile from '../../_components/card/doctor-profile';
 import PatientProfile from '../../_components/card/patient-profile';
+import { notFound } from 'next/navigation';
 
 async function TokenNumberPage({
   params,
@@ -10,6 +11,9 @@ async function TokenNumberPage({
   };
 }) {
   const { data } = await getAppointmentDetails(params.appointmentId);
+  if (!data) {
+    return notFound();
+  }
   return (
     <div className="flex flex-col justify-center w-full p-6">
       <div className="flex flex-col gap-4 justify-center items-center">
