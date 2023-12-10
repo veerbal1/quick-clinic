@@ -46,12 +46,13 @@ async function Content() {
             value: 'Email',
           },
           {
+            className:'hidden md:table-cell',
             header: 'location',
             value: 'Location',
           },
           {
             header: 'verifiedstatus',
-            value: 'Verification Status',
+            value: 'Status',
             cell: (row) => (
               <span
                 className={`${
