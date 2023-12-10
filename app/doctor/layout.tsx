@@ -35,7 +35,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="w-full">
       <Header menu={!underProcess && <SlideSidebar navLinks={navLinks} />} />
-      <div className='pb-14'>
+      <div className="pb-14">
         {!underProcess && (
           <div className="pt-5 p-5 flex gap-2">
             <div className="hidden md:block">
@@ -45,7 +45,7 @@ async function Layout({ children }: { children: React.ReactNode }) {
           </div>
         )}
         {pending && <PendingStatus doctorName={data.name} />}
-        {rejected && <Rejected />}
+        {rejected && <Rejected doctorName={data.name} />}
       </div>
     </div>
   );
