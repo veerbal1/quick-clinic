@@ -46,6 +46,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
   return NextResponse.json({
     message: 'Appointment created successfully',
     data: {
+      status: 'success',
       appointmentId: lastAppointmentId,
       tokenNumber: rows[0].tokennumber,
     },
