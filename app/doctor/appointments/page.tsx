@@ -35,6 +35,7 @@ async function Appointments() {
         }))}
         columns={[
           {
+            className: 'hidden md:table-cell',
             header: 'tokennumber',
             value: 'Token',
           },
@@ -47,6 +48,7 @@ async function Appointments() {
             value: 'Gender',
           },
           {
+            className: 'hidden md:table-cell',
             header: 'age',
             value: 'Age',
             cell: (row) => (
@@ -57,6 +59,7 @@ async function Appointments() {
             ),
           },
           {
+            className: 'hidden md:table-cell',
             header: 'healthissues',
             value: 'Health Issues',
           },
@@ -65,6 +68,7 @@ async function Appointments() {
             value: 'Status',
           },
           {
+            className: 'hidden md:table-cell',
             header: 'time',
             value: 'Time',
             cell: (row) => {
