@@ -184,6 +184,7 @@ export const getAppointmentDetails = async (appointmentId: string) => {
         aq.patientId AS patient_id,
         aq.tokenNumber AS token_number,
         aq.date AS appointment_date,
+        aq.doctorremarks AS appointment_doctor_remarks,
         aq.status AS appointment_status,
         aq.healthIssues AS appointment_health_issue,
         u.name AS doctor_name,

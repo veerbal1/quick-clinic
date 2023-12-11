@@ -1,6 +1,7 @@
 import { getAppointmentDetails } from '@/lib/db-queries';
 import { notFound } from 'next/navigation';
 import PatientHistory from './_components/patient-history';
+import Remarks from './_components/remarks';
 
 async function PatientDetails({
   params,
@@ -51,7 +52,24 @@ async function PatientDetails({
           </h1>
           <p className="leading-7 text-sm">{patient.token_number}</p>
         </div>
+        {data.appointment_status === 'completed' && (
+          <div>
+            <h1 className="text-lg font-bold text-muted-foreground">
+              Remarks by Doctor
+            </h1>
+            <p className="leading-7 text-sm">
+              {patient.appointment_doctor_remarks}
+            </p>
+          </div>
+        )}
       </div>
+      {data.appointment_status === 'scheduled' &&
+        !data.appointment_doctor_remarks && (
+          <div className="grid grid-cols-2">
+            <Remarks appointmentId={params.appointmentId} />
+          </div>
+        )}
+
       {/* Patient History */}
       <hr className="my-2" />
       <PatientHistory patientId={patient.patient_id} />

@@ -10,6 +10,7 @@ async function PatientHistoryTable({ patientId }: { patientId: string }) {
         {
           value: 'Date',
           header: 'date',
+          cell: (row) => <span>{new Date(row.date).toLocaleDateString()}</span>,
         },
         {
           value: 'Health Issues',

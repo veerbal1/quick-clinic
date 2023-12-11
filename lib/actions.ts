@@ -167,3 +167,25 @@ export async function rejectDoctor(id: string) {
     };
   }
 }
+
+export async function addRemarks(id: any, data: any) {
+  const entries = Object.fromEntries(data);
+  const { doctorremarks, appointment_id } = entries;
+  try {
+    const client = createClient();
+    await client.connect();
+    await client.sql`UPDATE quick_clinic_appointments SET doctorremarks = ${doctorremarks}, status = 'completed' WHERE id = ${appointment_id};`;
+    revalidatePath(`/doctor/patient/${appointment_id}`);
+    await client.end();
+    return {
+      status: 'success',
+      id: Math.random().toString(), // To use in useEffect array dependency to show the toast again
+      message: 'Remarks added successfully',
+    };
+  } catch (error) {
+    return {
+      status: 'failed',
+      message: 'Something went wrong',
+    };
+  }
+}
