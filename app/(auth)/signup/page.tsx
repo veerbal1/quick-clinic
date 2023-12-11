@@ -15,7 +15,7 @@ function SignUpPage() {
       >
         Log in
       </Link>
-      <div className="lg:p-8">
+      <div className="lg:p-8 mt-8 py-24">
         <div className="mx-auto flex w-full flex-col justify-center">
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
