@@ -181,6 +181,7 @@ export const getAppointmentDetails = async (appointmentId: string) => {
     const { rows } = await client.sql`
       SELECT
         aq.id AS appointment_id,
+        aq.patientId AS patient_id,
         aq.tokenNumber AS token_number,
         aq.date AS appointment_date,
         aq.status AS appointment_status,
@@ -221,6 +222,38 @@ export const getAppointmentDetails = async (appointmentId: string) => {
     };
   } catch (error) {
     console.log(error);
+    return {
+      status: 'failed',
+      message: 'Something went wrong',
+    };
+  }
+};
+
+export const getPatientHistory = async (patientId: string) => {
+  try {
+    const client = createClient();
+    await client.connect();
+
+    // quick_clinic_appointments
+    const { rows } = await client.sql`
+      SELECT ap.date, 
+             ap.healthissues,
+             ap.doctorremarks
+      FROM 
+              quick_clinic_appointments 
+      AS 
+              ap 
+      WHERE 
+              ap.patientId = ${patientId} 
+      AND 
+              ap.status = 'completed';
+    `;
+    return {
+      status: 'success',
+      data: rows,
+      message: 'Patient history fetched successfully',
+    };
+  } catch (error) {
     return {
       status: 'failed',
       message: 'Something went wrong',

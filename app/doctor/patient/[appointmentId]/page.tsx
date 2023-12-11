@@ -1,5 +1,6 @@
 import { getAppointmentDetails } from '@/lib/db-queries';
 import { notFound } from 'next/navigation';
+import PatientHistory from './_components/patient-history';
 
 async function PatientDetails({
   params,
@@ -12,8 +13,9 @@ async function PatientDetails({
   if (!data) return notFound();
   const patient = data;
   return (
-    <>
-      <div className="grid grid-cols-2 md:grid-cols-4">
+    <div className="grid grid-cols-1 gap-6">
+      <h1 className="text-xl font-bold">Patient Details</h1>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         <div>
           <h1 className="text-lg font-bold text-muted-foreground">Name</h1>
           <p className="leading-7 text-sm">{patient.patient_name}</p>
@@ -50,7 +52,10 @@ async function PatientDetails({
           <p className="leading-7 text-sm">{patient.token_number}</p>
         </div>
       </div>
-    </>
+      {/* Patient History */}
+      <hr className="my-2" />
+      <PatientHistory patientId={patient.patient_id} />
+    </div>
   );
 }
 
