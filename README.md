@@ -16,6 +16,6 @@ QuickClinic revolutionizes the way patients interact with healthcare providers, 
 To install QuickClinic, clone the repo and install the dependencies.
 
 ```bash
-git clone https://github.com/yourusername/quick-clinic.git
+git clone https://github.com/veerbal1/quick-clinic.git
 cd quick-clinic
 npm install
