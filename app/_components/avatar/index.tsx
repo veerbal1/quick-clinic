@@ -9,6 +9,7 @@ import {
 import { logout } from '@/lib/actions';
 import SignoutButton from './signout-button';
 import { getInitialsFromName } from '@/lib/format';
+import { getDoctorDetails } from '@/lib/db-queries';
 
 async function AvatarUI() {
   const session = await auth();
@@ -29,7 +30,7 @@ async function AvatarUI() {
             {user?.email}
           </p>
         </div>
-        <hr className='my-4'/>
+        <hr className="my-4" />
         <form action={logout}>
           <SignoutButton />
         </form>

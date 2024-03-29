@@ -209,7 +209,7 @@ const seedAppointment = async (client) => {
 const main = async () => {
   const client = await db.connect();
 
-  // await seedAdmin(client);
+  await seedAdmin(client);
   // await seedDoctor(client);
   // await seedPatient(client);
   // await seedToken(client);
